@@ -12,31 +12,32 @@ import java.util.List;
 @Component
 public class Bot extends TelegramLongPollingBot {
 
-    @Value("BestWeather239bot")
-    private String botUsername;
 
-    @Value("5056913305:AAGIe3Fi25jLQWF-2pCwgTnh_Wx__EyFa_A")
-    private String botToken;
+    public static final String TOKEN = "5056913305:AAGIe3Fi25jLQWF-2pCwgTnh_Wx__EyFa_A";
+    public static final String USERNAME = "BestWeather239bot";
 
-    /* Перегружаем метод интерфейса LongPollingBot
-    Теперь при получении сообщения наш бот будет отвечать сообщением Hi!
-     */
-    @Override
-    public void onUpdateReceived(Update update) {
-        try {
-            execute(new SendMessage().setChatId(update.getMessage().getChatId())
-                    .setText("Hi!"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
 
-    // Геттеры, которые необходимы для наследования от TelegramLongPollingBot
+
     public String getBotUsername() {
-        return botUsername;
+        return USERNAME;
     }
 
     public String getBotToken() {
-        return botToken;
+        return TOKEN;
     }
+    @Override
+    public void onUpdateReceived(Update update) {
+        if (update.getMessage()!=null && update.getMessage().hasText()) {
+            long chat_id = update.getMessage().getChatId();
+
+            try {
+                execute(new SendMessage(chat_id,"Hi"));
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
 }
